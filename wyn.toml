@@ -1,0 +1,4 @@
+[project]
+name = "tar"
+version = "0.1.0"
+description = "Read tar archive file listings"
