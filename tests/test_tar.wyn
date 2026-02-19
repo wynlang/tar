@@ -1,14 +1,29 @@
-fn main() -> int {
-    Test.init("tar")
+test "header size" {
     // Tar header is 512 bytes, name at offset 0 (100 bytes)
     var header_size = 512
     var name_offset = 0
     var name_len = 100
     var size_offset = 124
     var size_len = 12
-    Test.assert_eq_int(header_size, 512, "header size")
-    Test.assert_eq_int(name_offset + name_len, 100, "name field")
-    Test.assert_eq_int(size_offset + size_len, 136, "size field")
-    Test.summary()
-    return 0
+    assert_eq(header_size, 512)
+}
+
+test "name field" {
+    // Tar header is 512 bytes, name at offset 0 (100 bytes)
+    var header_size = 512
+    var name_offset = 0
+    var name_len = 100
+    var size_offset = 124
+    var size_len = 12
+    assert_eq(name_offset + name_len, 100)
+}
+
+test "size field" {
+    // Tar header is 512 bytes, name at offset 0 (100 bytes)
+    var header_size = 512
+    var name_offset = 0
+    var name_len = 100
+    var size_offset = 124
+    var size_len = 12
+    assert_eq(size_offset + size_len, 136)
 }
