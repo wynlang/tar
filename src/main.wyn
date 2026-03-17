@@ -1,0 +1,40 @@
+fn tar_header_size() -> int {
+    return 512
+}
+
+fn tar_name_field_len() -> int {
+    return 100
+}
+
+fn tar_size_field_offset() -> int {
+    return 124
+}
+
+fn tar_parse_octal(s: string) -> int {
+    var trimmed = s.trim()
+    var result = 0
+    for i in 0..trimmed.len() {
+        var ch = trimmed.substring(i, i + 1)
+        var digit = ch.to_int()
+        result = result * 8 + digit
+    }
+    return result
+}
+
+fn tar_entry_blocks(file_size: int) -> int {
+    var blocks = file_size / 512
+    if file_size % 512 != 0 {
+        blocks = blocks + 1
+    }
+    return blocks
+}
+
+fn main() {
+    println("header size: " + tar_header_size().to_string())
+    println("name field len: " + tar_name_field_len().to_string())
+    println("size field offset: " + tar_size_field_offset().to_string())
+    println("parse '755' octal: " + tar_parse_octal("755").to_string())
+    println("parse '644' octal: " + tar_parse_octal("644").to_string())
+    println("blocks for 1024 bytes: " + tar_entry_blocks(1024).to_string())
+    println("blocks for 1025 bytes: " + tar_entry_blocks(1025).to_string())
+}

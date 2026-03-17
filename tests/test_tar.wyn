@@ -1,29 +1,38 @@
-test "header size" {
-    // Tar header is 512 bytes, name at offset 0 (100 bytes)
-    var header_size = 512
-    var name_offset = 0
-    var name_len = 100
-    var size_offset = 124
-    var size_len = 12
-    assert_eq(header_size, 512)
+fn tar_header_size() -> int { return 512 }
+fn tar_name_field_len() -> int { return 100 }
+fn tar_size_field_offset() -> int { return 124 }
+
+fn tar_parse_octal(s: string) -> int {
+    var trimmed = s.trim()
+    var result = 0
+    for i in 0..trimmed.len() {
+        var ch = trimmed.substring(i, i + 1)
+        var digit = ch.to_int()
+        result = result * 8 + digit
+    }
+    return result
 }
 
-test "name field" {
-    // Tar header is 512 bytes, name at offset 0 (100 bytes)
-    var header_size = 512
-    var name_offset = 0
-    var name_len = 100
-    var size_offset = 124
-    var size_len = 12
-    assert_eq(name_offset + name_len, 100)
+fn tar_entry_blocks(file_size: int) -> int {
+    var blocks = file_size / 512
+    if file_size % 512 != 0 { blocks = blocks + 1 }
+    return blocks
 }
 
-test "size field" {
-    // Tar header is 512 bytes, name at offset 0 (100 bytes)
-    var header_size = 512
-    var name_offset = 0
-    var name_len = 100
-    var size_offset = 124
-    var size_len = 12
-    assert_eq(size_offset + size_len, 136)
+fn main() -> int {
+    assert_eq(tar_header_size(), 512)
+    assert_eq(tar_name_field_len(), 100)
+    assert_eq(tar_size_field_offset(), 124)
+    assert_eq(tar_parse_octal("755"), 493)
+    assert_eq(tar_parse_octal("644"), 420)
+    assert_eq(tar_parse_octal("0"), 0)
+    assert_eq(tar_parse_octal("100"), 64)
+    assert_eq(tar_entry_blocks(0), 0)
+    assert_eq(tar_entry_blocks(1), 1)
+    assert_eq(tar_entry_blocks(512), 1)
+    assert_eq(tar_entry_blocks(513), 2)
+    assert_eq(tar_entry_blocks(1024), 2)
+
+    println("tar: 12 tests passed")
+    return 0
 }
